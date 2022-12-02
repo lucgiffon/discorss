@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}{{ guild_name }}{% endblock %}
+{% block content %}
+    {% for dict_link in lst_dict_links %}
+        <div>
+{#        <div class="grid-article-border">#}
+            <div class="grid-article">
+                <div class="grid-item grid-item-title">
+                    <a href="{{ dict_link["url"] }}">{{ dict_link["title"] }}</a>
+                </div>
+                <div class="details">(Le: {{ dict_link["datepub"] }} | Source: {{ dict_link["site_name"] }})</div>
+
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}

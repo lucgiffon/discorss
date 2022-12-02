@@ -1,0 +1,18 @@
+# certifi
+# click
+python-dotenv
+Flask
+Flask-Login==0.6.2
+Flask-SQLAlchemy==2.5.1
+# greenlet==1.1.3
+# importlib-metadata
+# itsdangerous
+Jinja2
+# MarkupSafe
+# Pillow==8.4.0
+SQLAlchemy==1.4.41
+# Werkzeug
+# zipp
+flask-migrate
+flask_script
+beautifulsoup4
