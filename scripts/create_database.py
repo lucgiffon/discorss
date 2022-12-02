@@ -5,9 +5,10 @@ from os import path, environ
 
 from dotenv import load_dotenv
 from pathlib import Path
-from discorss_models.base import Base, engine
+from discorss_models.base import engine
 from alembic.config import Config
 from alembic import command
+from discorss_models.models import * #, Base
 
 # basedir = path.abspath(path.dirname(__file__))
 # load_dotenv(path.join(basedir, "../.env"))
