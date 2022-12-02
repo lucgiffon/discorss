@@ -1,5 +1,5 @@
 from flask_login import UserMixin
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, BIGINT
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import URLType
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -38,7 +38,7 @@ class Link(Base):
 class DiscordServer(Base):
     __tablename__ = 'discord_server'
     id = Column(Integer, primary_key=True)
-    discord_id = Column(Integer, unique=True, nullable=False)
+    discord_id = Column(BIGINT, unique=True, nullable=False)
     name = Column(String(150), unique=False, nullable=False)
     url_join = Column(URLType, nullable=True)
     lst_link_discord_pub = relationship('LinkDiscordPub', backref='discord_server', lazy=True)
@@ -48,5 +48,5 @@ class LinkDiscordPub(Base):
     __tablename__ = 'link_discord_pub'
     id = Column(Integer, primary_key=True)
     link_id = Column(Integer, ForeignKey('link.id'), nullable=False)
-    discord_server_id = Column(Integer, ForeignKey('discord_server.id'), nullable=False)
+    discord_server_id = Column(BIGINT, ForeignKey('discord_server.id'), nullable=False)
     date_publication = Column(DateTime, nullable=False)
