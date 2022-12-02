@@ -43,7 +43,7 @@ def upgrade():
     op.create_table('link_discord_pub',
                     sa.Column('id', sa.Integer(), nullable=False),
                     sa.Column('link_id', sa.Integer(), nullable=False),
-                    sa.Column('discord_server_id', sa.BIGINT(), nullable=False),
+                    sa.Column('discord_server_id', sa.Integer(), nullable=False),
                     sa.Column('date_publication', sa.DateTime(), nullable=False),
                     sa.ForeignKeyConstraint(['discord_server_id'], ['discord_server.id'], ),
                     sa.ForeignKeyConstraint(['link_id'], ['link.id'], ),
