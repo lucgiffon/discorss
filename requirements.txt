@@ -1,3 +1,5 @@
+-e .
+
 # certifi
 click
 python-dotenv
