@@ -25,14 +25,12 @@ def upgrade():
                     sa.Column('url_join', sqlalchemy_utils.types.url.URLType(), nullable=True),
                     sa.PrimaryKeyConstraint('id'),
                     sa.UniqueConstraint('discord_id'),
-                    sa.UniqueConstraint('url_join')
                     )
     op.create_table('link',
                     sa.Column('id', sa.Integer(), nullable=False),
                     sa.Column('url', sqlalchemy_utils.types.url.URLType(), nullable=False),
                     sa.Column('title', sa.String(length=150), nullable=False),
                     sa.PrimaryKeyConstraint('id'),
-                    sa.UniqueConstraint('url')
                     )
     op.create_table('user',
                     sa.Column('id', sa.Integer(), nullable=False),
