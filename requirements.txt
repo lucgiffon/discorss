@@ -20,3 +20,5 @@ flask_script
 beautifulsoup4
 sqlalchemy_utils
 alembic
+discord.py
+loguru
