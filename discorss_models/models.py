@@ -48,5 +48,5 @@ class LinkDiscordPub(Base):
     __tablename__ = 'link_discord_pub'
     id = Column(Integer, primary_key=True)
     link_id = Column(Integer, ForeignKey('link.id'), nullable=False)
-    discord_server_id = Column(Integer, ForeignKey('discord_server.id'), nullable=False)
+    discord_server_id = Column(BIGINT, ForeignKey('discord_server.id'), nullable=False)
     date_publication = Column(DateTime, nullable=False)
