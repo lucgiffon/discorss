@@ -18,3 +18,4 @@ Werkzeug
 # flask-migrate
 flask_script
 beautifulsoup4
+sqlalchemy_utils
