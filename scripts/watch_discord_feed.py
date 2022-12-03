@@ -1,6 +1,7 @@
 import re
 from os import path, environ
 import urllib.request as urllib
+from urllib.error import URLError
 
 import discord
 from dotenv import load_dotenv
@@ -25,7 +26,7 @@ def get_page_title_of_url(url):
     -------
         The title of the page at the provided url.
     """
-    soup = bs(urllib.urlopen(url), features="html.parser")
+    soup = bs(urllib.urlopen(url, timeout=20), features="html.parser")
     return soup.title.string
 
 
@@ -138,7 +139,7 @@ class DiscoRSS(commands.Bot):
             for url in all_urls:
                 logger.info(f"Found url: {url}")
                 try:
-                    title = get_page_title_of_url(url)
+                    title = get_page_title_of_url(url)  # this might throw an URLerror
                     new_url_orm = get_or_create(self.__sqlalchemy_session, Link, url=url, title=title)
 
                     discordserver_id = message.channel.guild.id
@@ -154,6 +155,10 @@ class DiscoRSS(commands.Bot):
                 except (OperationalError, PendingRollbackError, ValueError) as SqlError:
                     logger.error(SqlError)
                     self.__sqlalchemy_session.rollback()
+                except URLError as ue:
+                    logger.error(f"Could not open URL {url}: {ue}")
+                    self.__sqlalchemy_session.rollback()
+
 
             await message.channel.send("Message traité.")
 
