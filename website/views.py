@@ -32,7 +32,7 @@ def get_lst_dict_links_from_id(id_guild):
     return lst_dict_links
 
 
-@views_blueprint.route("/<int:id_guild>")
+@views_blueprint.route("/<int:id_guild>", strict_slashes=False)
 def guild_page(id_guild):
     guild_name = get_guild_name_from_id(id_guild)
 
