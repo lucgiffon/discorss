@@ -8,6 +8,8 @@ app = create_app()
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     db_session.remove()
+    if exception and db_session.is_active:
+        db_session.rollback()
 
 
 if __name__ == '__main__':

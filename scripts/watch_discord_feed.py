@@ -6,6 +6,7 @@ import discord
 from dotenv import load_dotenv
 from loguru import logger
 from sqlalchemy import create_engine
+from sqlalchemy.exc import PendingRollbackError, OperationalError
 from sqlalchemy.orm import Session
 from bs4 import BeautifulSoup as bs
 
@@ -136,19 +137,23 @@ class DiscoRSS(commands.Bot):
             all_urls = re.findall(r'(https?://\S+)', message.content)
             for url in all_urls:
                 logger.info(f"Found url: {url}")
-                title = get_page_title_of_url(url)
-                new_url_orm = get_or_create(self.__sqlalchemy_session, Link, url=url, title=title)
+                try:
+                    title = get_page_title_of_url(url)
+                    new_url_orm = get_or_create(self.__sqlalchemy_session, Link, url=url, title=title)
 
-                discordserver_id = message.channel.guild.id
-                discordserver = self.__sqlalchemy_session.query(DiscordServer).filter((DiscordServer.discord_id == discordserver_id)).first()
-                if discordserver is None:
-                    raise ValueError(f"DiscordServer object with id={discordserver_id} should exist in the database.")
+                    discordserver_id = message.channel.guild.id
+                    discordserver = self.__sqlalchemy_session.query(DiscordServer).filter((DiscordServer.discord_id == discordserver_id)).first()
+                    if discordserver is None:
+                        raise ValueError(f"DiscordServer object with id={discordserver_id} should exist in the database.")
 
-                new_link_discord_pub = LinkDiscordPub(link_id=new_url_orm.id,
-                                                      discord_server_id=discordserver.id,  # this might be rendered faster by just using the discord_id as foreign key
-                                                      date_publication=message.created_at)
-                self.__sqlalchemy_session.add(new_link_discord_pub)
-                self.__sqlalchemy_session.commit()
+                    new_link_discord_pub = LinkDiscordPub(link_id=new_url_orm.id,
+                                                          discord_server_id=discordserver.id,  # this might be rendered faster by just using the discord_id as foreign key
+                                                          date_publication=message.created_at)
+                    self.__sqlalchemy_session.add(new_link_discord_pub)
+                    self.__sqlalchemy_session.commit()
+                except (OperationalError, PendingRollbackError, ValueError) as SqlError:
+                    logger.error(SqlError)
+                    self.__sqlalchemy_session.rollback()
 
             await message.channel.send("Message traité.")
 
@@ -159,6 +164,7 @@ def main():
 
     client = DiscoRSS(sqlalchemy_session=db_session, command_prefix="$", intents=intents)
     client.run(environ.get("DISCORD_BOT_TOKEN"))
+    db_session.remove()
 
 
 if __name__ == "__main__":
