@@ -25,7 +25,8 @@ def get_lst_dict_links_from_id(id_guild):
             title=res.link.title,
             url=res.link.url,
             datepub=res.date_publication.strftime("%d/%m/%Y"),
-            site_name=".".join(res.link.url.split("/")[2].split(".")[-3:])  # gets only the 'subdomain.domain.ext' part of the url
+            # gets only the 'subdomain.domain.ext' part of the url and remove the get request parameters
+            site_name=(".".join(res.link.url.split("/")[2].split(".")[-3:]).split("?")[0])
         )
         for res in lst_result]
     return lst_dict_links

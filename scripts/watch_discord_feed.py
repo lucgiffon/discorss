@@ -3,6 +3,8 @@ from os import path, environ
 import urllib.request as urllib
 from urllib.error import URLError
 import html
+
+import click
 import discord
 from dotenv import load_dotenv
 from loguru import logger
@@ -61,8 +63,9 @@ class DiscoRSS(commands.Bot):
     """
     Discord bot that watches messages, find URLs and store them in a database.
     """
-    def __init__(self, sqlalchemy_session: Session, *args, **kwargs):
+    def __init__(self, sqlalchemy_session: Session, debug, *args, **kwargs):
         self.__sqlalchemy_session = sqlalchemy_session
+        self.__debug = debug
         super().__init__(*args, **kwargs)
 
     # todo rework this function to be less intensive and then add it to on_ready and on_resume
@@ -161,15 +164,17 @@ class DiscoRSS(commands.Bot):
                     logger.error(f"Could not open URL {url}: {ue}")
                     self.__sqlalchemy_session.rollback()
 
+            if self.__debug:
+                await message.channel.send("Message traité.")
 
-            await message.channel.send("Message traité.")
 
-def main():
-
+@click.command()
+@click.option("--debug", is_flag=True, help="Enable some behaviors useful for debugging.")
+def main(debug):
     intents = discord.Intents.default()
     intents.message_content = True
 
-    client = DiscoRSS(sqlalchemy_session=db_session, command_prefix="$", intents=intents)
+    client = DiscoRSS(sqlalchemy_session=db_session, command_prefix="$", intents=intents, debug=debug)
     client.run(environ.get("DISCORD_BOT_TOKEN"))
     db_session.remove()
 
