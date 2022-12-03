@@ -2,7 +2,7 @@ import re
 from os import path, environ
 import urllib.request as urllib
 from urllib.error import URLError
-
+import html
 import discord
 from dotenv import load_dotenv
 from loguru import logger
@@ -140,6 +140,8 @@ class DiscoRSS(commands.Bot):
                 logger.info(f"Found url: {url}")
                 try:
                     title = get_page_title_of_url(url)  # this might throw an URLerror
+                    url = html.escape(url)
+                    title = html.escape(title)
                     new_url_orm = get_or_create(self.__sqlalchemy_session, Link, url=url, title=title)
 
                     discordserver_id = message.channel.guild.id
