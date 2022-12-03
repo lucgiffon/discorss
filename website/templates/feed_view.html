@@ -1,16 +1,28 @@
 {% extends "base.html" %}
 {% block title %}{{ guild_name }}{% endblock %}
 {% block content %}
+    <div class="container">
     {% for dict_link in lst_dict_links %}
-        <div>
-{#        <div class="grid-article-border">#}
-            <div class="grid-article">
-                <div class="grid-item grid-item-title">
-                    <a href="{{ dict_link["url"] }}">{{ dict_link["title"] }}</a>
-                </div>
-                <div class="details">(Le: {{ dict_link["datepub"] }} | Source: {{ dict_link["site_name"] }})</div>
-
+        <div class="grid-item">
+            <div class="grid-item grid-item-title">
+                <a href="{{ dict_link["url"] }}">{{ dict_link["title"] }}</a>
             </div>
+            <div class="details">(Le: {{ dict_link["datepub"] }} | Source: {{ dict_link["site_name"] }})</div>
         </div>
     {% endfor %}
+
+    <div class="navigation">
+    {% if prev_url %}
+    <a class="button" href="{{ prev_url }}">&lt; précédent</a>
+    {% endif %}
+    {% if prev_url and next_url %}
+    |
+    {% endif %}
+    {% if next_url %}
+    <a class="button" href="{{ next_url }}">suivant &gt;</a>
+    {% endif %}
+    </div>
+
+    </div>
+
 {% endblock %}
