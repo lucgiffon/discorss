@@ -13,7 +13,7 @@ from sqlalchemy.exc import PendingRollbackError, OperationalError
 from sqlalchemy.orm import Session
 from bs4 import BeautifulSoup as bs
 
-from discorss_models.models import Link, DiscordServer, LinkDiscordPub
+from discorss_models.models import Link, DiscordServer, LinkDiscordPub, MAX_STRING_SIZE
 from discorss_models.base import db_session
 
 basedir = path.abspath(path.dirname(__file__))
@@ -29,7 +29,13 @@ def get_page_title_of_url(url):
         The title of the page at the provided url.
     """
     soup = bs(urllib.urlopen(url, timeout=20), features="html.parser")
-    return soup.title.string
+    title = soup.title.string
+    if len(title) > MAX_STRING_SIZE:
+        appended_string = " [...]"
+        truncated_title = title[:MAX_STRING_SIZE-len(appended_string)]
+        truncated_title = " ".join(truncated_title.split()[:-1])
+        title = truncated_title + appended_string
+    return title
 
 
 def get_or_create(session, model, **kwargs):
@@ -57,6 +63,25 @@ def get_or_create(session, model, **kwargs):
         session.add(instance)
         session.commit()
         return instance
+
+
+def transform_url(url):
+    """
+    Apply transformations to the input url so that they become easier to handle later in the process.
+
+    Parameters
+    ----------
+    url
+        The url to transform.
+    Returns
+    -------
+        The transformed url.
+    """
+    # twitter links are placed with nitter ones for two reasons:
+    # 1- twitter pages doesn't have an easy to access title html tag. Nitter ones does.
+    # 2- protect the mental health of the users.
+    url = url.replace("//twitter.com/", "//nitter.net/")
+    return url
 
 
 class DiscoRSS(commands.Bot):
@@ -142,11 +167,13 @@ class DiscoRSS(commands.Bot):
             for url in all_urls:
                 logger.info(f"Found url: {url}")
                 try:
+                    url = transform_url(url)
                     title = get_page_title_of_url(url)  # this might throw an URLerror
                     new_url_orm = get_or_create(self.__sqlalchemy_session, Link, url=url, title=title)
 
                     discordserver_id = message.channel.guild.id
-                    discordserver = self.__sqlalchemy_session.query(DiscordServer).filter((DiscordServer.discord_id == discordserver_id)).first()
+                    discordserver = self.__sqlalchemy_session.query(DiscordServer)\
+                        .filter((DiscordServer.discord_id == discordserver_id)).first()
                     if discordserver is None:
                         raise ValueError(f"DiscordServer object with id={discordserver_id} should exist in the database.")
 
