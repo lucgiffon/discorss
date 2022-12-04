@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block title %}{{ guild_name }}{% endblock %}
+{% block servername %}<span>{{ guild_name }}</span>{% endblock %}
 {% block content %}
     <div class="container">
     {% for dict_link in lst_dict_links %}
@@ -15,9 +16,9 @@
     {% if prev_url %}
     <a class="button" href="{{ prev_url }}">&lt; précédent</a>
     {% endif %}
-    {% if prev_url and next_url %}
-    |
-    {% endif %}
+{#    {% if prev_url and next_url %}#}
+{#    |#}
+{#    {% endif %}#}
     {% if next_url %}
     <a class="button" href="{{ next_url }}">suivant &gt;</a>
     {% endif %}

@@ -69,4 +69,7 @@ def guild_page(id_guild):
     next_url = url_for(f'views.guild_page', page=page_number+1, id_guild=id_guild) if has_next else None
     prev_url = url_for(f'views.guild_page', page=page_number-1, id_guild=id_guild) if has_prev else None
 
-    return render_template("feed_view.html", guild_name=guild_name, lst_dict_links=lst_dict_links, next_url=next_url, prev_url=prev_url)
+    return render_template("feed_view.html",
+                           guild_name=guild_name,
+                           lst_dict_links=lst_dict_links,
+                           next_url=next_url, prev_url=prev_url)
