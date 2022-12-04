@@ -20,7 +20,18 @@ basedir = path.abspath(path.dirname(__file__))
 load_dotenv(path.join(basedir, "../.env"))
 
 from discord.ext import commands
+import io
+from PyPDF2 import PdfFileReader
 
+
+def get_title_of_pdf_from_http_response(http_response):
+    remote_file = http_response.read()
+    memory_file = io.BytesIO(remote_file)
+    pdf_file = PdfFileReader(memory_file)
+    try:
+        return pdf_file.metadata["/Title"]
+    except KeyError:
+        raise NoTitleFoundException(f"No Title tag found in pdf.")
 
 def get_page_title_of_url(url):
     """
@@ -28,9 +39,31 @@ def get_page_title_of_url(url):
     -------
         The title of the page at the provided url.
     """
-    soup = bs(urllib.urlopen(url, timeout=20), features="html.parser")
-    title = soup.title.string
+    import ssl
+    try:
+        http_response = urllib.urlopen(url, timeout=20)
+    except URLError as ue:
+        if "[SSL: CERTIFICATE_VERIFY_FAILED]" in str(ue):
+            logger.warning(f"Found URL with failed SSL certificate verification: {url}. But proceeding.")
+            context = ssl._create_unverified_context()
+            http_response = urllib.urlopen(url, timeout=20, context=context)
+        else:
+            raise ue
+
+    if http_response.headers['content-type'] == "application/pdf":
+        title = get_title_of_pdf_from_http_response(http_response)
+    else:
+        assert http_response.headers["content-type"] == "text/html"
+        soup = bs(http_response, features="html.parser")
+        try:
+            title = soup.title.string
+        except AttributeError:
+            assert soup.title is None
+            raise NoTitleFoundException(f"No title in html document.")
+
+
     if len(title) > MAX_STRING_SIZE:
+        logger.warning(f"Title at URL {url} is too big. Truncating.")
         appended_string = " [...]"
         truncated_title = title[:MAX_STRING_SIZE-len(appended_string)]
         truncated_title = " ".join(truncated_title.split()[:-1])
@@ -82,6 +115,12 @@ def transform_url(url):
     # 2- protect the mental health of the users.
     url = url.replace("//twitter.com/", "//nitter.net/")
     return url
+
+
+class NoTitleFoundException(Exception):
+    def __init__(self, reason):
+        self.reason = reason
+        super().__init__()
 
 
 class DiscoRSS(commands.Bot):
@@ -168,7 +207,12 @@ class DiscoRSS(commands.Bot):
                 logger.info(f"Found url: {url}")
                 try:
                     url = transform_url(url)
-                    title = get_page_title_of_url(url)  # this might throw an URLerror
+                    try:
+                        title = get_page_title_of_url(url)  # this might throw an URLerror or AttributeError
+                    except NoTitleFoundException as e:
+                        logger.warning(
+                            f"No Title tag found at {url}. Use the last piece of url instead. Reason: {e.reason}")
+                        title = url
                     new_url_orm = get_or_create(self.__sqlalchemy_session, Link, url=url, title=title)
 
                     discordserver_id = message.channel.guild.id
