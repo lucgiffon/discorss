@@ -41,7 +41,9 @@ def get_page_title_of_url(url):
     """
     import ssl
     try:
-        http_response = urllib.urlopen(url, timeout=20)
+        user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.19 (KHTML, like Gecko) Ubuntu/12.04 Chromium/18.0.1025.168 Chrome/18.0.1025.168 Safari/535.19'
+        http_response = urllib.urlopen(urllib.Request(url, headers={'User-Agent': user_agent}), timeout=20)
+        # http_response = urllib.urlopen(url, timeout=20)
     except URLError as ue:
         if "[SSL: CERTIFICATE_VERIFY_FAILED]" in str(ue):
             logger.warning(f"Found URL with failed SSL certificate verification: {url}. But proceeding.")
@@ -53,7 +55,7 @@ def get_page_title_of_url(url):
     if http_response.headers['content-type'] == "application/pdf":
         title = get_title_of_pdf_from_http_response(http_response)
     else:
-        assert http_response.headers["content-type"] == "text/html"
+        assert "text/html" in http_response.headers["content-type"]
         soup = bs(http_response, features="html.parser")
         try:
             title = soup.title.string
