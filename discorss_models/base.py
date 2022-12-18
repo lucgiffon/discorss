@@ -13,7 +13,8 @@ basedir = path.abspath(path.dirname(__file__))
 load_dotenv(path.join(basedir, "../.env"))
 
 DATABASE_URI = environ.get('DATABASE_URI')
-engine = create_engine(f"{DATABASE_URI}", echo=True)
+engine = create_engine(f"{DATABASE_URI}", echo=True, pool_pre_ping=True)
+# https://stackoverflow.com/questions/6471549/avoiding-mysql-server-has-gone-away-on-infrequently-used-python-flask-server
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
                                          bind=engine))
