@@ -1,3 +1,8 @@
+Spirit:
+- Lightweight
+- Anonymous
+- No comments
+
 To run the project locally you need to:
 - setup the database (once)
 - launch the website
