@@ -30,6 +30,7 @@ body {
 #subtitle, a#subtitle:link, a#subtitle:visited, a#subtitle:hover, a#subtitle:active {
     color: black;
     text-decoration: none;
+    font-weight: 700;
 }
 
 .grid-item{
