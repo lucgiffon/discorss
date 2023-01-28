@@ -7,7 +7,7 @@
         <div class="grid-item">
             <div class="grid-item-title">
                 {% if dict_link["channel_name"] is not none %}
-                    <span class="flair">{{ dict_link["channel_name"] }}</span>
+                    <a href="/{{ guild_id }}/?channels={{ dict_link["channel_name"] }}" class="flair">{{ dict_link["channel_name"] }}</a>
                 {% endif %}
                 <a href="{{ dict_link["url"] }}">{{ dict_link["title"] }}</a>
             </div>

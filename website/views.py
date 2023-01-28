@@ -43,7 +43,7 @@ def get_lst_dict_links_from_id(id_guild, requested_channel_names, page_number):
         .join(Link) \
         .outerjoin(DiscordServerChannel, LinkDiscordPub.discord_server_channel_id == DiscordServerChannel.id)
 
-    if requested_channel_names != "":
+    if requested_channel_names:
         query_object = query_object.filter(DiscordServerChannel.name.in_(requested_channel_names))
 
     total_count = query_object.count()
@@ -78,6 +78,9 @@ def guild_page(id_guild):
     page_number = request.args.get('page', 1, type=int)
     requested_channel_names = request.args.get('channels', "", type=str).split(" ")
 
+    if requested_channel_names == ['']:
+        requested_channel_names = []
+
     try:
         guild = get_guild_name_from_id(id_guild)
         guild_name = guild.name
@@ -90,11 +93,16 @@ def guild_page(id_guild):
 
     lst_dict_links, has_prev, has_next = get_lst_dict_links_from_id(id_guild, requested_channel_names, page_number)
 
-    next_url = url_for(f'views.guild_page', page=page_number+1, id_guild=id_guild) if has_next else None
-    prev_url = url_for(f'views.guild_page', page=page_number-1, id_guild=id_guild) if has_prev else None
+    if requested_channel_names: # Necessary because otherwise channels "get field" appears in the url.
+        next_url = url_for(f'views.guild_page', page=page_number+1, id_guild=id_guild, channels=" ".join(requested_channel_names).strip()) if has_next else None
+        prev_url = url_for(f'views.guild_page', page=page_number-1, id_guild=id_guild, channels=" ".join(requested_channel_names).strip()) if has_prev else None
+    else:
+        next_url = url_for(f'views.guild_page', page=page_number + 1, id_guild=id_guild) if has_next else None
+        prev_url = url_for(f'views.guild_page', page=page_number - 1, id_guild=id_guild) if has_prev else None
 
     return render_template("feed_view.html",
                            guild_name=guild_name,
+                           guild_id=id_guild,
                            lst_dict_links=lst_dict_links,
                            next_url=next_url,
                            prev_url=prev_url)

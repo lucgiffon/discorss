@@ -90,7 +90,7 @@ body {
     }
 }
 
-.flair {
+.flair, a.flair:link, a.flair:visited  {
     padding: 1px;
     border: solid;
     border-width: 1px;
