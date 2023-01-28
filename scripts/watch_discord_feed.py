@@ -153,6 +153,7 @@ class DiscoRSS(commands.Bot):
 
     async def create_all_guilds_entries(self):
         """
+        Never used
         Check all current guilds of bot and add them to the database if they do not exist.
 
         This function will take more and more time to execute as the bot is invited to more and more guilds.
@@ -179,7 +180,6 @@ class DiscoRSS(commands.Bot):
             - Add all guilds to the database
         """
         logger.info(f"{self.user} is ready.")
-        await self.create_all_guilds_entries()
 
     async def on_resumed(self):
         """
@@ -204,6 +204,7 @@ class DiscoRSS(commands.Bot):
         if message.author == self.user:
             return
         else:
+            channel = message.channel
             all_urls = re.findall(r'(https?://\S+)', message.content)
             for url in all_urls:
                 logger.info(f"Found url: {url}")
@@ -216,12 +217,8 @@ class DiscoRSS(commands.Bot):
                             f"No Title tag found at {url}. Use the last piece of url instead. Reason: {e.reason}")
                         title = url
                     new_url_orm = get_or_create(self.__sqlalchemy_session, Link, url=url, title=title)
-
                     discordserver_id = message.channel.guild.id
-                    discordserver = self.__sqlalchemy_session.query(DiscordServer)\
-                        .filter((DiscordServer.discord_id == discordserver_id)).first()
-                    if discordserver is None:
-                        raise ValueError(f"DiscordServer object with id={discordserver_id} should exist in the database.")
+                    discordserver = get_or_create(self.__sqlalchemy_session, DiscordServer, discord_id=discordserver_id)
 
                     new_link_discord_pub = LinkDiscordPub(link_id=new_url_orm.id,
                                                           discord_server_id=discordserver.id,  # this might be rendered faster by just using the discord_id as foreign key
