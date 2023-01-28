@@ -3,7 +3,6 @@ from os import path, environ
 import urllib.request as urllib
 from urllib.error import URLError
 import html
-
 import click
 import discord
 from dotenv import load_dotenv
@@ -41,7 +40,7 @@ def get_page_title_of_url(url):
     """
     import ssl
     try:
-        user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.19 (KHTML, like Gecko) Ubuntu/12.04 Chromium/18.0.1025.168 Chrome/18.0.1025.168 Safari/535.19'
+        user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
         http_response = urllib.urlopen(urllib.Request(url, headers={'User-Agent': user_agent}), timeout=20)
         # http_response = urllib.urlopen(url, timeout=20)
     except URLError as ue:
@@ -62,7 +61,6 @@ def get_page_title_of_url(url):
         except AttributeError:
             assert soup.title is None
             raise NoTitleFoundException(f"No title in html document.")
-
 
     if len(title) > MAX_STRING_SIZE:
         logger.warning(f"Title at URL {url} is too big. Truncating.")
