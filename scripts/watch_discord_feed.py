@@ -13,7 +13,7 @@ from sqlalchemy.exc import PendingRollbackError, OperationalError
 from sqlalchemy.orm import Session
 from bs4 import BeautifulSoup as bs
 
-from discorss_models.models import Link, DiscordServer, LinkDiscordPub, MAX_STRING_SIZE
+from discorss_models.models import Link, DiscordServer, LinkDiscordPub, MAX_STRING_SIZE, DiscordServerChannel
 from discorss_models.base import db_session
 
 basedir = path.abspath(path.dirname(__file__))
@@ -205,6 +205,7 @@ class DiscoRSS(commands.Bot):
             return
         else:
             channel = message.channel
+            logger.debug(f"Channel topic: {channel.topic}.")
             all_urls = re.findall(r'(https?://\S+)', message.content)
             for url in all_urls:
                 logger.info(f"Found url: {url}")
@@ -218,10 +219,14 @@ class DiscoRSS(commands.Bot):
                         title = url
                     new_url_orm = get_or_create(self.__sqlalchemy_session, Link, url=url, title=title)
                     discordserver_id = message.channel.guild.id
-                    discordserver = get_or_create(self.__sqlalchemy_session, DiscordServer, discord_id=discordserver_id)
-
+                    discordserver = get_or_create(self.__sqlalchemy_session, DiscordServer,
+                                                  discord_id=discordserver_id, name=message.channel.guild.name)
+                    discord_server_channel = get_or_create(self.__sqlalchemy_session, DiscordServerChannel,
+                                                           discord_server_id=discordserver.id,
+                                                           name=channel.name)
                     new_link_discord_pub = LinkDiscordPub(link_id=new_url_orm.id,
-                                                          discord_server_id=discordserver.id,  # this might be rendered faster by just using the discord_id as foreign key
+                                                          discord_server_id=discordserver.id,
+                                                          discord_server_channel_id=discord_server_channel.id,
                                                           date_publication=message.created_at)
                     self.__sqlalchemy_session.add(new_link_discord_pub)
                     self.__sqlalchemy_session.commit()
