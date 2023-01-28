@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}{{ guild_name }}{% endblock %}
-{% block servername %}<span>{{ guild_name }}</span>{% endblock %}
+{% block servername %}<a href="/{{ guild_id }}" id="subtitle">{{ guild_name }}</a>{% endblock %}
 {% block content %}
     <div class="container">
     {% for dict_link in lst_dict_links %}
