@@ -51,6 +51,7 @@ body {
     color: #696969;
     font-size: x-small;
     pointer-events: none;
+    margin-top: 3px;
 }
 
 .grid-item-datepub {
@@ -87,4 +88,14 @@ body {
     .navigation {
         text-align: left;
     }
+}
+
+.flair {
+    padding: 1px;
+    border: solid;
+    border-width: 1px;
+    color: black;
+    border-color: black;
+    background-color: white;
+    font-weight:400;
 }

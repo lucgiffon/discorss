@@ -5,7 +5,10 @@
     <div class="container">
     {% for dict_link in lst_dict_links %}
         <div class="grid-item">
-            <div class="grid-item grid-item-title">
+            <div class="grid-item-title">
+                {% if dict_link["channel_name"] is not none %}
+                    <span class="flair">{{ dict_link["channel_name"] }}</span>
+                {% endif %}
                 <a href="{{ dict_link["url"] }}">{{ dict_link["title"] }}</a>
             </div>
             <div class="details">(Le: {{ dict_link["datepub"] }} | Source: {{ dict_link["site_name"] }})</div>

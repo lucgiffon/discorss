@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, abort, request, url_for  # it mean
 from loguru import logger
 
 from config import Config
-from discorss_models.models import DiscordServer, LinkDiscordPub, Link
+from discorss_models.models import DiscordServer, LinkDiscordPub, Link, DiscordServerChannel
 from flask import redirect
 
 views_blueprint = Blueprint('views', __name__)
@@ -21,9 +21,27 @@ def get_guild_name_from_id(id_guild):
 
 
 def get_lst_dict_links_from_id(id_guild, page_number):
+    """
+    For the guild identified by `id_guild`, get the links to display on page `page_number`
+
+    Return has_prev, has_next being boolean telling if the is a page before and a page after the `page_number`.
+
+    Parameters
+    ----------
+    id_guild
+    page_number
+
+    Returns
+    -------
+        Tuple: (List of dict with the right attributes, has_prev, has_next)
+
+    """
     number_of_rows_per_page = Config.POSTS_PER_PAGE
 
-    query_object = LinkDiscordPub.query.join(Link).join(DiscordServer).filter(DiscordServer.discord_id == id_guild)
+    query_object = LinkDiscordPub.query.join(DiscordServer)\
+        .filter(DiscordServer.discord_id == id_guild)\
+        .join(Link)\
+        .outerjoin(DiscordServerChannel, LinkDiscordPub.discord_server_channel_id==DiscordServerChannel.id)
     total_count = query_object.count()
     total_nb_page = ceil(total_count/ number_of_rows_per_page)
 
@@ -44,7 +62,8 @@ def get_lst_dict_links_from_id(id_guild, page_number):
             url=res.link.url,
             datepub=res.date_publication.strftime("%d/%m/%Y"),
             # gets only the 'subdomain.domain.ext' part of the url and remove the get request parameters
-            site_name=(".".join(res.link.url.split("/")[2].split(".")[-3:]).split("?")[0])
+            site_name=(".".join(res.link.url.split("/")[2].split(".")[-3:]).split("?")[0]),
+            channel_name=res.discord_server_channel.name if hasattr(res.discord_server_channel, "name") else None
         )
         for res in lst_result]
     return lst_dict_links, has_prev, has_next
@@ -72,4 +91,5 @@ def guild_page(id_guild):
     return render_template("feed_view.html",
                            guild_name=guild_name,
                            lst_dict_links=lst_dict_links,
-                           next_url=next_url, prev_url=prev_url)
+                           next_url=next_url,
+                           prev_url=prev_url)
