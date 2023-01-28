@@ -20,7 +20,7 @@ def get_guild_name_from_id(id_guild):
     return result
 
 
-def get_lst_dict_links_from_id(id_guild, page_number):
+def get_lst_dict_links_from_id(id_guild, requested_channel_names, page_number):
     """
     For the guild identified by `id_guild`, get the links to display on page `page_number`
 
@@ -29,6 +29,7 @@ def get_lst_dict_links_from_id(id_guild, page_number):
     Parameters
     ----------
     id_guild
+    requested_channel_names
     page_number
 
     Returns
@@ -37,11 +38,14 @@ def get_lst_dict_links_from_id(id_guild, page_number):
 
     """
     number_of_rows_per_page = Config.POSTS_PER_PAGE
+    query_object = LinkDiscordPub.query.join(DiscordServer) \
+        .filter(DiscordServer.discord_id == id_guild) \
+        .join(Link) \
+        .outerjoin(DiscordServerChannel, LinkDiscordPub.discord_server_channel_id == DiscordServerChannel.id)
 
-    query_object = LinkDiscordPub.query.join(DiscordServer)\
-        .filter(DiscordServer.discord_id == id_guild)\
-        .join(Link)\
-        .outerjoin(DiscordServerChannel, LinkDiscordPub.discord_server_channel_id==DiscordServerChannel.id)
+    if requested_channel_names != "":
+        query_object = query_object.filter(DiscordServerChannel.name.in_(requested_channel_names))
+
     total_count = query_object.count()
     total_nb_page = ceil(total_count/ number_of_rows_per_page)
 
@@ -72,6 +76,7 @@ def get_lst_dict_links_from_id(id_guild, page_number):
 @views_blueprint.route("/<int:id_guild>", strict_slashes=False, methods=['GET'])
 def guild_page(id_guild):
     page_number = request.args.get('page', 1, type=int)
+    requested_channel_names = request.args.get('channels', "", type=str).split(" ")
 
     try:
         guild = get_guild_name_from_id(id_guild)
@@ -83,7 +88,7 @@ def guild_page(id_guild):
         logger.error(oe)
         abort(404)
 
-    lst_dict_links, has_prev, has_next = get_lst_dict_links_from_id(id_guild, page_number)
+    lst_dict_links, has_prev, has_next = get_lst_dict_links_from_id(id_guild, requested_channel_names, page_number)
 
     next_url = url_for(f'views.guild_page', page=page_number+1, id_guild=id_guild) if has_next else None
     prev_url = url_for(f'views.guild_page', page=page_number-1, id_guild=id_guild) if has_prev else None
