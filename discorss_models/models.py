@@ -52,6 +52,7 @@ class LinkDiscordPub(Base):
     discord_server_id = Column(Integer, ForeignKey('discord_server.id'), nullable=False)
     discord_server_channel_id = Column(Integer, ForeignKey('discord_server_channel.id'), nullable=True)
     date_publication = Column(DateTime, nullable=False)
+    jump_url = Column(URLType, nullable=True)  # could be not nullable if the database was filled
 
 
 class DiscordServerChannel(Base):

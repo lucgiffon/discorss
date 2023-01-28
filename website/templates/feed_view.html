@@ -11,7 +11,11 @@
                 {% endif %}
                 <a href="{{ dict_link["url"] }}">{{ dict_link["title"] }}</a>
             </div>
-            <div class="details">(Le: {{ dict_link["datepub"] }} | Source: {{ dict_link["site_name"] }})</div>
+            <div class="details">(Le: {{ dict_link["datepub"] }} | Source: {{ dict_link["site_name"] }}
+            {% if dict_link["jump_url"] is not none %}
+                | <a href="{{ dict_link["jump_url"]  }}">Voir la conversation</a>)
+            {% endif %}
+            </div>
         </div>
     {% endfor %}
 

@@ -227,7 +227,8 @@ class DiscoRSS(commands.Bot):
                     new_link_discord_pub = LinkDiscordPub(link_id=new_url_orm.id,
                                                           discord_server_id=discordserver.id,
                                                           discord_server_channel_id=discord_server_channel.id,
-                                                          date_publication=message.created_at)
+                                                          date_publication=message.created_at,
+                                                          jump_url=message.jump_url)
                     self.__sqlalchemy_session.add(new_link_discord_pub)
                     self.__sqlalchemy_session.commit()
                 except (OperationalError, PendingRollbackError, ValueError) as SqlError:

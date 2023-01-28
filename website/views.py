@@ -67,7 +67,8 @@ def get_lst_dict_links_from_id(id_guild, requested_channel_names, page_number):
             datepub=res.date_publication.strftime("%d/%m/%Y"),
             # gets only the 'subdomain.domain.ext' part of the url and remove the get request parameters
             site_name=(".".join(res.link.url.split("/")[2].split(".")[-3:]).split("?")[0]),
-            channel_name=res.discord_server_channel.name if hasattr(res.discord_server_channel, "name") else None
+            channel_name=res.discord_server_channel.name if hasattr(res.discord_server_channel, "name") else None,
+            jump_url=res.jump_url,
         )
         for res in lst_result]
     return lst_dict_links, has_prev, has_next

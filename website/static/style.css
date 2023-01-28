@@ -52,10 +52,9 @@ body {
     opacity: 0.70;
 }
 
-.details {
+.details, .details a:link, .details a:visited {
     color: #696969;
     font-size: x-small;
-    pointer-events: none;
     margin-top: 3px;
 }
 
