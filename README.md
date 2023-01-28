@@ -1,10 +1,9 @@
-Use alembic for migrating the database:
+To run the project locally you need to:
+- setup the database (once)
+- launch the website
+- launch the bot
 
-    alembic revision --autogenerate -m "name" # verify output
-    alembic upgrade head
-    alembic downgrade -1
-    alembic history
-    
+
 Create the database from scratch and set alembic head to current state
 
     python scripts/create_database.py

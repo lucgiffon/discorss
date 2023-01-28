@@ -50,4 +50,13 @@ class LinkDiscordPub(Base):
     id = Column(Integer, primary_key=True)
     link_id = Column(Integer, ForeignKey('link.id'), nullable=False)
     discord_server_id = Column(Integer, ForeignKey('discord_server.id'), nullable=False)
+    discord_server_channel_id = Column(Integer, ForeignKey('discord_server_channel.id'), nullable=True)
     date_publication = Column(DateTime, nullable=False)
+
+
+class DiscordServerChannel(Base):
+    __tablename__ = 'discord_server_channel'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(MAX_STRING_SIZE), nullable=False)
+    discord_server_id = Column(Integer, ForeignKey('discord_server.id'), nullable=False)
+    lst_link_discord_pub = relationship('LinkDiscordPub', backref='discord_server_channel', lazy=True)

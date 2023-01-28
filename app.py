@@ -1,7 +1,6 @@
 from discorss_models.base import db_session
 from website import create_app
 
-
 app = create_app()
 
 
