@@ -8,9 +8,8 @@ Le bot DiscoRSS permet d'exporter sa veille collective depuis discord vers une p
 
 ## Démonstration
 
-- Vous pouvez joindre le serveur de test en cliquant ici: https://discord.gg/jxnkWEAR6a
-- Vous pourrez alors poster des url dans les différents canaux de discussion.
-- Et voir la restitution sur le site web ici: http://discorss.lucgiffon.fr/1041036125894082621
+- Cette page web: http://discorss.lucgiffon.fr/1041036125894082621
+- Présente les urls recueillis sur ce serveur: https://discord.gg/jxnkWEAR6a .
 
 ## Installation
 
