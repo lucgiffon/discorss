@@ -6,6 +6,12 @@ Le bot DiscoRSS permet d'exporter sa veille collective depuis discord vers une p
 
 *********** est une association d'intérêt écologiste. Son serveur discord est le lieu de débats où des références pertinentes sur l'écologie sont couramment partagées au fil des discussions des utilisateurs. Les sources partagées qui constituent une veille collective sont référencées puis affichées sur la page dédiée DiscoRSS de l'association. La veille peut alors être partagée à des personnes qui ne souhaitent pas utiliser discord via le site internet.
 
+## Démonstration
+
+Vous pouvez joindre le serveur de test en cliquant ici: https://discord.gg/jxnkWEAR6a
+Vous pourrez alors poster des url dans les différents canaux de discussion.
+Et voir la restitution sur le site web ici: http://discorss.lucgiffon.fr/1041036125894082621
+
 ## Installation
 
 Pour installer le bot sur votre serveur. Contactez moi (levez une issue par exemple).
