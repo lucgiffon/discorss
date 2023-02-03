@@ -77,10 +77,7 @@ def get_lst_dict_links_from_id(id_guild, requested_channel_names, page_number):
 @views_blueprint.route("/<int:id_guild>", strict_slashes=False, methods=['GET'])
 def guild_page(id_guild):
     page_number = request.args.get('page', 1, type=int)
-    requested_channel_names = request.args.get('channels', "", type=str).split(" ")
-
-    if requested_channel_names == ['']:
-        requested_channel_names = []
+    requested_channel_names = request.args.get('channels', "", type=str).split()
 
     try:
         guild = get_guild_name_from_id(id_guild)
