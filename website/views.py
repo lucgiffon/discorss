@@ -47,7 +47,7 @@ def get_lst_dict_links_from_id(id_guild, requested_channel_names, page_number):
         query_object = query_object.filter(DiscordServerChannel.name.in_(requested_channel_names))
 
     total_count = query_object.count()
-    total_nb_page = ceil(total_count/ number_of_rows_per_page)
+    total_nb_page = max(1, ceil(total_count/ number_of_rows_per_page))
 
     if page_number <= 0 or page_number > total_nb_page:
         abort(404)
