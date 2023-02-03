@@ -12,6 +12,7 @@ from sqlalchemy.exc import PendingRollbackError, OperationalError
 from sqlalchemy.orm import Session
 from bs4 import BeautifulSoup as bs
 import traceback
+import re
 
 from discorss_models.models import Link, DiscordServer, LinkDiscordPub, MAX_STRING_SIZE, DiscordServerChannel
 from discorss_models.base import db_session
@@ -32,6 +33,16 @@ def get_title_of_pdf_from_http_response(http_response):
         return pdf_file.metadata["/Title"]
     except KeyError:
         raise NoTitleFoundException(f"No Title tag found in pdf.")
+
+
+def remove_emojis(data):
+    emoj = re.compile("["
+        u"\U0001F600-\U0001F64F"  # emoticons
+        u"\U0001F300-\U0001F5FF"  # symbols & pictographs
+        u"\U0001F680-\U0001F6FF"  # transport & map symbols
+        u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
+                      "]+", re.UNICODE)
+    return re.sub(emoj, '', data)
 
 
 def get_page_title_of_url(url):
@@ -223,7 +234,7 @@ class DiscoRSS(commands.Bot):
                                                   discord_id=discordserver_id, name=message.channel.guild.name)
                     discord_server_channel = get_or_create(self.__sqlalchemy_session, DiscordServerChannel,
                                                            discord_server_id=discordserver.id,
-                                                           name=channel.name)
+                                                           name=remove_emojis(channel.name))
                     new_link_discord_pub = LinkDiscordPub(link_id=new_url_orm.id,
                                                           discord_server_id=discordserver.id,
                                                           discord_server_channel_id=discord_server_channel.id,
