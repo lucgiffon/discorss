@@ -151,21 +151,19 @@ class DiscoRSS(commands.Bot):
 
     async def create_all_guilds_entries(self):
         """
-        Never used
         Check all current guilds of bot and add them to the database if they do not exist.
 
         This function will take more and more time to execute as the bot is invited to more and more guilds.
         """
+        logger.info(f"Setup guilds ({len(self.guilds)})..")
         for guild in self.guilds:
             name = guild.name
             id_ = guild.id
-            discordguild_obj = self.__sqlalchemy_session.query(DiscordServer).filter(
-                (DiscordServer.discord_id == id_)).first()
-            if not discordguild_obj:
-                logger.info(f"Found guild {name} with id={id_} absent from the database. Add this entry.")
-                discordguild_obj = DiscordServer(name=name, discord_id=id_)
-                self.__sqlalchemy_session.add(discordguild_obj)
-                self.__sqlalchemy_session.commit()
+            _ = get_or_create(self.__sqlalchemy_session, DiscordServer,
+                                             discord_id=id_,
+                                             name=name,
+                                             )
+
 
     async def on_ready(self):
         """
@@ -177,6 +175,7 @@ class DiscoRSS(commands.Bot):
         Things to do:
             - Add all guilds to the database
         """
+        await self.create_all_guilds_entries()
         logger.info(f"{self.user} is ready.")
 
     async def on_resumed(self):
