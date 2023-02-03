@@ -11,6 +11,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.exc import PendingRollbackError, OperationalError
 from sqlalchemy.orm import Session
 from bs4 import BeautifulSoup as bs
+import traceback
 
 from discorss_models.models import Link, DiscordServer, LinkDiscordPub, MAX_STRING_SIZE, DiscordServerChannel
 from discorss_models.base import db_session
@@ -127,9 +128,8 @@ class DiscoRSS(commands.Bot):
     """
     Discord bot that watches messages, find URLs and store them in a database.
     """
-    def __init__(self, sqlalchemy_session: Session, debug, *args, **kwargs):
+    def __init__(self, sqlalchemy_session: Session, *args, **kwargs):
         self.__sqlalchemy_session = sqlalchemy_session
-        self.__debug = debug
         super().__init__(*args, **kwargs)
 
     # todo rework this function to be less intensive and then add it to on_ready and on_resume
@@ -230,23 +230,20 @@ class DiscoRSS(commands.Bot):
                     self.__sqlalchemy_session.add(new_link_discord_pub)
                     self.__sqlalchemy_session.commit()
                 except (OperationalError, PendingRollbackError, ValueError) as SqlError:
-                    logger.error(SqlError)
+                    logger.error(traceback.format_exc())
                     self.__sqlalchemy_session.rollback()
                 except URLError as ue:
-                    logger.error(f"Could not open URL {url}: {ue}")
+                    logger.error(f"Could not open URL {url}: {traceback.format_exc()}")
                     self.__sqlalchemy_session.rollback()
 
-            if self.__debug:
-                await message.channel.send("Message traité.")
 
 
 @click.command()
-@click.option("--debug", is_flag=True, help="Enable some behaviors useful for debugging.")
-def main(debug):
+def main():
     intents = discord.Intents.default()
     intents.message_content = True
 
-    client = DiscoRSS(sqlalchemy_session=db_session, command_prefix="$", intents=intents, debug=debug)
+    client = DiscoRSS(sqlalchemy_session=db_session, command_prefix="$", intents=intents)
     client.run(environ.get("DISCORD_BOT_TOKEN"))
     db_session.remove()
 
