@@ -33,6 +33,7 @@ def get_title_of_pdf_from_http_response(http_response):
     except KeyError:
         raise NoTitleFoundException(f"No Title tag found in pdf.")
 
+
 def get_page_title_of_url(url):
     """
     Returns
@@ -66,7 +67,7 @@ def get_page_title_of_url(url):
     if len(title) > MAX_STRING_SIZE:
         logger.warning(f"Title at URL {url} is too big. Truncating.")
         appended_string = " [...]"
-        truncated_title = title[:MAX_STRING_SIZE-len(appended_string)]
+        truncated_title = title[:MAX_STRING_SIZE - len(appended_string)]
         truncated_title = " ".join(truncated_title.split()[:-1])
         title = truncated_title + appended_string
     return title
@@ -128,9 +129,12 @@ class DiscoRSS(commands.Bot):
     """
     Discord bot that watches messages, find URLs and store them in a database.
     """
-    def __init__(self, sqlalchemy_session: Session, *args, **kwargs):
+
+    def __init__(self, website_root_url: str, sqlalchemy_session: Session, *args, **kwargs):
+        commands.Bot.__init__(self, *args, **kwargs)
         self.__sqlalchemy_session = sqlalchemy_session
-        super().__init__(*args, **kwargs)
+        self.website_root_url = website_root_url
+        self.add_commands()
 
     # todo rework this function to be less intensive and then add it to on_ready and on_resume
     async def my_function(self):
@@ -160,10 +164,9 @@ class DiscoRSS(commands.Bot):
             name = guild.name
             id_ = guild.id
             _ = get_or_create(self.__sqlalchemy_session, DiscordServer,
-                                             discord_id=id_,
-                                             name=name,
-                                             )
-
+                              discord_id=id_,
+                              name=name,
+                              )
 
     async def on_ready(self):
         """
@@ -235,6 +238,13 @@ class DiscoRSS(commands.Bot):
                     logger.error(f"Could not open URL {url}: {traceback.format_exc()}")
                     self.__sqlalchemy_session.rollback()
 
+        await self.process_commands(message)
+
+    def add_commands(self):
+        @self.command(name="url", pass_context=True)
+        async def url(ctx):
+            guild_id = ctx.guild.id
+            await ctx.channel.send(f"Voici l'URL DiscoRSS du serveur: {self.website_root_url.strip('/')}/{guild_id}")
 
 
 @click.command()
@@ -242,12 +252,12 @@ def main():
     intents = discord.Intents.default()
     intents.message_content = True
 
-    client = DiscoRSS(sqlalchemy_session=db_session, command_prefix="$", intents=intents)
+    client = DiscoRSS(website_root_url=environ.get("WEBSITE_ROOT_URL"), sqlalchemy_session=db_session,
+                      command_prefix="/", intents=intents)
+
     client.run(environ.get("DISCORD_BOT_TOKEN"))
     db_session.remove()
 
 
 if __name__ == "__main__":
     main()
-
-
