@@ -33,3 +33,8 @@ def test_extract_one_title_from_url():
     assert "GitHub: Let’s build from here · GitHub" == extract_one_title_from_url("https://github.com/")
     assert "https://www.africau.edu/images/default/sample.pdf" == extract_one_title_from_url("https://www.africau.edu/images/default/sample.pdf")
 
+
+def test_fb_video_link():
+    title = extract_one_title_from_url("https://fb.watch/itX7SrJh75/")
+    assert title.startswith('Vous connaissez peut-être "Les Aventuriers du Rail"')
+    print(title)

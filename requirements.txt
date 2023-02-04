@@ -23,3 +23,5 @@ alembic
 discord.py
 loguru
 pypdf2
+pytest
+requests

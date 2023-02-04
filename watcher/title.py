@@ -8,6 +8,7 @@ from loguru import logger
 import ssl
 
 from discorss_models.models import MAX_STRING_SIZE
+from watcher.facebook_post_scrapper import FaceBookBot
 from watcher.str_utils import transform_long_titles, transform_url
 
 
@@ -98,14 +99,22 @@ def get_page_title_of_url(url):
     -------
         The title of the page at the provided url.
     """
-
-    http_response = get_http_response_from_url(url)
-
-    if http_response.headers['content-type'] == "application/pdf":
-        title = get_title_from_pdf_http_response(http_response)
+    # todo I will certainly have over specific cases. Refactor this part in such case.
+    if "https://fb.watch/" in url:
+        fb = FaceBookBot()
+        http_response_fb = fb.parse_html(url)
+        http_response_content_type = http_response_fb.headers['content-type']
+        http_response_content = http_response_fb.text
     else:
-        assert "text/html" in http_response.headers["content-type"], "Unexpected content type"
-        title = get_title_from_text_html_http_response(http_response)
+        http_response = get_http_response_from_url(url)
+        http_response_content_type = http_response.headers['content-type']
+        http_response_content = http_response
+
+    if http_response_content_type == "application/pdf":
+        title = get_title_from_pdf_http_response(http_response_content)
+    else:
+        assert "text/html" in http_response_content_type, "Unexpected content type"
+        title = get_title_from_text_html_http_response(http_response_content)
 
     if len(title) > MAX_STRING_SIZE:
         logger.warning(f"Title at URL {url} is too big. Truncating.")
