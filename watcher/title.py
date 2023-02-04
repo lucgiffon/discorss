@@ -11,29 +11,6 @@ from discorss_models.models import MAX_STRING_SIZE
 from watcher.str_utils import transform_long_titles, transform_url
 
 
-def get_title_from_pdf_http_response(http_response):
-    """
-    Parameters
-    ----------
-    http_response
-
-    Raises
-    ------
-    NoTitleFoundException if the pdf doesn't have any title
-
-    Returns
-    -------
-        Title of pdf if it is reachable.
-    """
-    remote_file = http_response.read()
-    memory_file = io.BytesIO(remote_file)
-    pdf_file = PdfFileReader(memory_file)
-    try:
-        return pdf_file.metadata["/Title"]
-    except KeyError:
-        raise NoTitleFoundException(f"No Title tag found in pdf.")
-
-
 def get_http_response_from_url(url):
     """
     Just make a http request at the given url.
@@ -65,6 +42,29 @@ def get_http_response_from_url(url):
         else:
             raise ue
     return http_response
+
+
+def get_title_from_pdf_http_response(http_response):
+    """
+    Parameters
+    ----------
+    http_response
+
+    Raises
+    ------
+    NoTitleFoundException if the pdf doesn't have any title
+
+    Returns
+    -------
+        Title of pdf if it is reachable.
+    """
+    remote_file = http_response.read()
+    memory_file = io.BytesIO(remote_file)
+    pdf_file = PdfFileReader(memory_file)
+    try:
+        return pdf_file.metadata["/Title"]
+    except KeyError:
+        raise NoTitleFoundException(f"No Title tag found in pdf.")
 
 
 def get_title_from_text_html_http_response(http_response):
