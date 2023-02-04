@@ -26,6 +26,8 @@ def test_get_page_title_of_url():
     assert "GitHub: Let’s build from here · GitHub" == get_page_title_of_url("https://github.com/")
     with pytest.raises(NoTitleFoundException):
         title = get_page_title_of_url("https://www.africau.edu/images/default/sample.pdf")
+    with pytest.raises(NoTitleFoundException):
+        title = get_page_title_of_url("https://www.vie-publique.fr/sites/default/files/rapport/pdf/184000093.pdf ")
 
 
 def test_extract_one_title_from_url():
