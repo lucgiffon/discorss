@@ -31,7 +31,7 @@ class Link(Base):
     __tablename__ = 'link'
     id = Column(Integer, primary_key=True)
     url = Column(URLType, nullable=False)
-    title = Column(String(MAX_STRING_SIZE), nullable=False)
+    title = Column(String(MAX_STRING_SIZE, collation="utf8mb4_general_ci"), nullable=False)
     # this adds a 'link' attribute to LinkDiscordPub
     lst_link_discord_pub = relationship('LinkDiscordPub', backref='link', lazy=True)
 
@@ -40,7 +40,7 @@ class DiscordServer(Base):
     __tablename__ = 'discord_server'
     id = Column(Integer, primary_key=True)
     discord_id = Column(BIGINT, unique=True, nullable=False)
-    name = Column(String(MAX_STRING_SIZE), unique=False, nullable=False)
+    name = Column(String(MAX_STRING_SIZE, collation="utf8mb4_general_ci"), unique=False, nullable=False)
     url_join = Column(URLType, nullable=True)
     lst_link_discord_pub = relationship('LinkDiscordPub', backref='discord_server', lazy=True)
 
@@ -58,6 +58,6 @@ class LinkDiscordPub(Base):
 class DiscordServerChannel(Base):
     __tablename__ = 'discord_server_channel'
     id = Column(Integer, primary_key=True)
-    name = Column(String(MAX_STRING_SIZE), nullable=False)
+    name = Column(String(MAX_STRING_SIZE, collation="utf8mb4_general_ci"), nullable=False, unique=False)
     discord_server_id = Column(Integer, ForeignKey('discord_server.id'), nullable=False)
     lst_link_discord_pub = relationship('LinkDiscordPub', backref='discord_server_channel', lazy=True)
