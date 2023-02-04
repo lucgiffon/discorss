@@ -33,6 +33,17 @@ def get_title_of_pdf_from_http_response(http_response):
 
 
 def remove_emojis(data):
+    """
+    Found on stackoverflow. Doesn't seem to work for all emojis
+
+    Parameters
+    ----------
+    data
+
+    Returns
+    -------
+
+    """
     emoj = re.compile("["
         u"\U0001F600-\U0001F64F"  # emoticons
         u"\U0001F300-\U0001F5FF"  # symbols & pictographs
@@ -228,10 +239,10 @@ class DiscoRSS(commands.Bot):
                     new_url_orm = get_or_create(self.__sqlalchemy_session, Link, url=url, title=title)
                     discordserver_id = message.channel.guild.id
                     discordserver = get_or_create(self.__sqlalchemy_session, DiscordServer,
-                                                  discord_id=discordserver_id, name=remove_emojis(message.channel.guild.name))
+                                                  discord_id=discordserver_id, name=message.channel.guild.name)
                     discord_server_channel = get_or_create(self.__sqlalchemy_session, DiscordServerChannel,
                                                            discord_server_id=discordserver.id,
-                                                           name=remove_emojis(channel.name))
+                                                           name=channel.name)
                     new_link_discord_pub = LinkDiscordPub(link_id=new_url_orm.id,
                                                           discord_server_id=discordserver.id,
                                                           discord_server_channel_id=discord_server_channel.id,
@@ -245,6 +256,7 @@ class DiscoRSS(commands.Bot):
                 except URLError as ue:
                     logger.error(f"Could not open URL {url}: {traceback.format_exc()}")
                     self.__sqlalchemy_session.rollback()
+                logger.info(f"Processed url: {url}")
 
         await self.process_commands(message)
 
