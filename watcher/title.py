@@ -45,7 +45,7 @@ def get_http_response_from_url(url):
     return http_response
 
 
-def get_title_from_pdf_http_response(http_response):
+def get_title_from_pdf_http_response(http_response) -> str:
     """
     Parameters
     ----------
@@ -63,12 +63,12 @@ def get_title_from_pdf_http_response(http_response):
     memory_file = io.BytesIO(remote_file)
     pdf_file = PdfFileReader(memory_file)
     try:
-        return pdf_file.metadata["/Title"]
+        return str(pdf_file.metadata["/Title"])
     except KeyError:
         raise NoTitleFoundException(f"No Title tag found in pdf.")
 
 
-def get_title_from_text_html_http_response(http_response):
+def get_title_from_text_html_http_response(http_response) -> str:
     """
     Parameters
     ----------
@@ -116,7 +116,9 @@ def get_page_title_of_url(url):
         assert "text/html" in http_response_content_type, "Unexpected content type"
         title = get_title_from_text_html_http_response(http_response_content)
 
-    if len(title) > MAX_STRING_SIZE:
+    if title.strip() == "":
+        raise NoTitleFoundException(f"Empty title found.")
+    elif len(title) > MAX_STRING_SIZE:
         logger.warning(f"Title at URL {url} is too big. Truncating.")
         title = transform_long_titles(title, MAX_STRING_SIZE)
 
