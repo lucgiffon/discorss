@@ -40,3 +40,9 @@ def test_fb_video_link():
     title = extract_one_title_from_url("https://fb.watch/itX7SrJh75/")
     assert title.startswith('Vous connaissez peut-être "Les Aventuriers du Rail"')
     print(title)
+
+
+def test_lareleveetlapeste_link():
+    title = extract_one_title_from_url("https://lareleveetlapeste.fr/des-associations-sunissent-pour-stopper-labattage-des-arbres-en-ile-de-france/")
+    assert title.startswith('Des associations s’unissent pour stopper l’abattage des arbres en Ile-de-France')
+    print(title)

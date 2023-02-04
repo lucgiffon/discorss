@@ -85,6 +85,8 @@ def get_title_from_text_html_http_response(http_response) -> str:
     soup = bs(http_response, features="html.parser")
     try:
         title = soup.title.string
+        if title == "La Relève et La Peste":
+            title = soup.find("h1", {"class": "letterspacing-title"}).text
     except AttributeError:
         assert soup.title is None
         raise NoTitleFoundException(f"No title in html document.")
