@@ -17,8 +17,9 @@ class DiscoRSS(commands.Bot):
     Discord bot that watches messages, find URLs and store them in a database.
     """
 
-    def __init__(self, website_root_url: str, sqlalchemy_session: Session, *args, **kwargs):
+    def __init__(self, website_root_url: str, sqlalchemy_session: Session, debug: bool, *args, **kwargs):
         commands.Bot.__init__(self, *args, **kwargs)
+        self.debug = debug
         self.__sqlalchemy_session = sqlalchemy_session
         self.website_root_url = website_root_url
         self.add_commands()
@@ -109,7 +110,8 @@ class DiscoRSS(commands.Bot):
             ctx
             """
             guild_id = ctx.guild.id
-            await ctx.channel.send(f"Voici l'URL DiscoRSS du serveur: {self.website_root_url.strip('/')}/{guild_id}")
+            if not self.debug:
+                await ctx.channel.send(f"Voici l'URL DiscoRSS du serveur: {self.website_root_url.strip('/')}/{guild_id}")
 
     def find_urls(self, message):
         """
