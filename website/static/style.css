@@ -45,9 +45,9 @@ body {
 }
 
 .grid-item-title > a {
-    display: inline-block;
     text-decoration: none;
-    font-weight: 400;
+    font-weight: bold;
+    word-wrap: break-word;
 }
 
 .grid-item-title > a:link {
@@ -64,7 +64,7 @@ body {
     margin-top: 3px;
 }
 
-.content, container {
+.content, .container {
     display: grid;
     margin: 5px;
 }
@@ -74,7 +74,6 @@ body {
 }
 
 .container {
-    display: grid;
     grid-row-gap: 20px;
 }
 
@@ -83,7 +82,7 @@ a:hover {
 }
 
 .navigation {
-    text-align: right;
+    text-align: center;
     margin: 10px;
 }
 
@@ -93,6 +92,9 @@ a:hover {
     background-color: var(--light-bg-color);
     text-decoration: none;
     color: inherit;
+    border: solid;
+    border-color: #a6a6a6;
+    border-width: 1px;
 }
 
 .navigation > a:hover {
@@ -101,12 +103,12 @@ a:hover {
 }
 
 .navigation > a#prev::before {
-    content: "←";
+    content: "↩";
     margin-right: 10px;
 }
 
 .navigation > a#next::after {
-    content: "→";
+    content: "↪";
     margin-left: 10px;
 }
 
@@ -118,7 +120,8 @@ a:hover {
 
 .flair, a.flair:link, a.flair:visited  {
     border: solid;
-    border-width: 0;
+    border-color: #a6a6a6;
+    border-width: 1px;
     color: inherit;
     background-color: var(--light-bg-color);
     font-weight:100;
@@ -126,10 +129,6 @@ a:hover {
     padding: 1px 7px;
     font-size: 0.8em;
     margin-bottom: 3px;
-}
-
-.flair:first-letter {
-    padding-right: 5px;
 }
 
 @media (prefers-color-scheme: dark) {
