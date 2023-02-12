@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 
 from discorss_models.models import DiscordServer, Link, DiscordServerChannel, LinkDiscordPub
 from discorss_models.utils import get_or_create
+from watcher.str_utils import create_slug_for_guild
 from watcher.title import extract_one_title_from_url
 
 
@@ -51,9 +52,11 @@ class DiscoRSS(commands.Bot):
         for guild in self.guilds:
             name = guild.name
             id_ = guild.id
+            slug_guild = create_slug_for_guild(name, id_)
             _ = get_or_create(self.__sqlalchemy_session, DiscordServer,
                               discord_id=id_,
                               name=name,
+                              slug_guild=slug_guild
                               )
 
     async def on_ready(self):
@@ -131,8 +134,10 @@ class DiscoRSS(commands.Bot):
                 new_url_orm = get_or_create(self.__sqlalchemy_session, Link, url=url, title=title)
 
                 discordserver_id = message.channel.guild.id
+                discordserver_name = message.channel.guild.name
                 discordserver = get_or_create(self.__sqlalchemy_session, DiscordServer,
-                                              discord_id=discordserver_id, name=message.channel.guild.name)
+                                              discord_id=discordserver_id, name=discordserver_name,
+                                              slug_guild=create_slug_for_guild(discordserver_name, discordserver_id))
 
                 discord_server_channel = get_or_create(self.__sqlalchemy_session, DiscordServerChannel,
                                                        discord_server_id=discordserver.id,

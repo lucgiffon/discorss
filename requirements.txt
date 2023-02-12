@@ -25,3 +25,4 @@ loguru
 pypdf2
 pytest
 requests
+unidecode

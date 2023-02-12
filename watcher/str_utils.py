@@ -4,6 +4,10 @@ Functions to be used to make transformations or checks on text (url / titles for
 
 import re
 
+import random
+import string
+from unidecode import unidecode
+
 
 def transform_url(url):
     """
@@ -70,3 +74,9 @@ def transform_long_titles(title, max_string_size):
     truncated_title = " ".join(truncated_title.split()[:-1])
     title = truncated_title + appended_string
     return title
+
+
+def create_slug_for_guild(name, id_):
+    random.seed(id_)
+    random_str = ''.join(random.choice(string.ascii_lowercase) for i in range(8))
+    return "-".join(unidecode(name.lower()).split() + [random_str])

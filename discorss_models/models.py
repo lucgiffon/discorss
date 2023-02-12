@@ -43,6 +43,7 @@ class DiscordServer(Base):
     name = Column(String(MAX_STRING_SIZE, collation="utf8mb4_general_ci"), unique=False, nullable=False)
     url_join = Column(URLType, nullable=True)
     lst_link_discord_pub = relationship('LinkDiscordPub', backref='discord_server', lazy=True)
+    slug_guild = Column(String(MAX_STRING_SIZE, collation="utf8mb4_general_ci"), unique=True, nullable=False)
 
 
 class LinkDiscordPub(Base):

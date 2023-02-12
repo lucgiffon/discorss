@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% block title %}{{ guild_name }}{% endblock %}
-{% block servername %}<a href="/{{ guild_id }}" id="subtitle">{{ guild_name }}</a>{% endblock %}
+{% block servername %}<a href="/d/{{ guild_slug }}" id="subtitle">{{ guild_name }}</a>{% endblock %}
 {% block content %}
     <div class="container">
     {% for dict_link in lst_dict_links %}
         <div class="grid-item">
             <div class="grid-item-title">
                 {% if dict_link["channel_name"] is not none %}
-                    <a href="/{{ guild_id }}/?channels={{ dict_link["channel_name"] }}" class="flair">{{ dict_link["channel_name"] }}</a>
+                    <a href="/d/{{ guild_slug }}/?channels={{ dict_link["channel_name"] }}" class="flair">{{ dict_link["channel_name"] }}</a>
                 {% endif %}
                 <a href="{{ dict_link["url"] }}" target="_blank"
                     {% if dict_link["url"] == dict_link["title"] %}
