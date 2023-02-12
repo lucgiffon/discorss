@@ -9,7 +9,7 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: "Courier New", serif;
     font-size: 16px;
     line-height: 1.4
 }
@@ -40,14 +40,27 @@ body {
     color: var(--light-text-color)
 }
 
+.content, .container {
+    display: grid;
+    margin: 5px;
+}
+
+.content {
+    grid-row-gap: 10px;
+}
+
+.container {
+    grid-row-gap: 20px;
+}
+
 .grid-item{
     grid-row-gap: 3px;
+    word-wrap: break-word;
 }
 
 .grid-item-title > a {
     text-decoration: none;
     font-weight: bold;
-    word-wrap: break-word;
 }
 
 .grid-item-title > a:link {
@@ -62,19 +75,6 @@ body {
     color: var(--light-text-color);
     font-size: x-small;
     margin-top: 3px;
-}
-
-.content, .container {
-    display: grid;
-    margin: 5px;
-}
-
-.content {
-    grid-row-gap: 10px;
-}
-
-.container {
-    grid-row-gap: 20px;
 }
 
 a:hover {
