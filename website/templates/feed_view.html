@@ -9,11 +9,15 @@
                 {% if dict_link["channel_name"] is not none %}
                     <a href="/{{ guild_id }}/?channels={{ dict_link["channel_name"] }}" class="flair">{{ dict_link["channel_name"] }}</a>
                 {% endif %}
-                <a href="{{ dict_link["url"] }}" target="_blank">{{ dict_link["title"] }}</a>
+                <a href="{{ dict_link["url"] }}" target="_blank"
+                    {% if dict_link["url"] == dict_link["title"] %}
+                        style="word-break: break-all;"
+                    {% endif %}
+                >{{ dict_link["title"] }}</a>
             </div>
-            <div class="details">(Le: {{ dict_link["datepub"] }} | Source: {{ dict_link["site_name"] }}
+            <div class="details">Le: {{ dict_link["datepub"] }} | Source: {{ dict_link["site_name"] }}
             {% if dict_link["jump_url"] is not none %}
-                | <a href="{{ dict_link["jump_url"]  }}" target="_blank">Voir la conversation</a>)
+                | <a href="{{ dict_link["jump_url"]  }}" target="_blank">Voir la conversation</a>
             {% endif %}
             </div>
         </div>
@@ -23,13 +27,10 @@
 
     <div class="navigation">
     {% if prev_url %}
-    <a class="button" href="{{ prev_url }}">&lt; précédent</a>
+        <a class="button" id="prev" href="{{ prev_url }}"><span>précédent</span></a>
     {% endif %}
-{#    {% if prev_url and next_url %}#}
-{#    |#}
-{#    {% endif %}#}
     {% if next_url %}
-    <a class="button" href="{{ next_url }}">suivant &gt;</a>
+    <a class="button" id="next" href="{{ next_url }}"><span>suivant</span></a>
     {% endif %}
     </div>
 

@@ -1,5 +1,7 @@
 :root {
-  --main-color: #4B70B4;
+    --main-color: #3b6ad9;
+    --light-text-color: #696969;
+    --light-bg-color: #eee;
 }
 
 * {
@@ -7,10 +9,9 @@
 }
 
 body {
-    font-family: 'Courier New', monospace;
+    font-family: "Courier New", serif;
     font-size: 16px;
-    line-height: 1.4;
-    background-color: #f5f1ee;
+    line-height: 1.4
 }
 
 #navbar {
@@ -21,85 +22,140 @@ body {
     flex-direction: column;
 }
 
-#title, a#title:link, a#title:visited, a#title:hover, a#title:active {
+#title, a#title:link, a#title:visited, a#title, a#title:active {
     font-weight: 1000;
     font-size: x-large;
-    color: black;
+    color: white;
     text-decoration: none;
 }
-#subtitle, a#subtitle:link, a#subtitle:visited, a#subtitle:hover, a#subtitle:active {
-    color: black;
+#subtitle, a#subtitle:link, a#subtitle:visited, a#subtitle, a#subtitle:active {
+    color: white;
     text-decoration: none;
-    font-weight: 700;
+    font-weight: 300;
+}
+
+.tip {
+    font-style: italic;
+    font-size: 0.7em;
+    color: var(--light-text-color)
+}
+
+.content, .container {
+    display: grid;
+    margin: 5px;
+}
+
+.content {
+    grid-row-gap: 10px;
+}
+
+.container {
+    grid-row-gap: 20px;
 }
 
 .grid-item{
     grid-row-gap: 3px;
+    word-wrap: break-word;
 }
 
-.grid-item-title {
-    word-wrap: break-word;
-    font-weight: 700;
-}
 .grid-item-title > a {
     text-decoration: none;
+    font-weight: bold;
 }
+
 .grid-item-title > a:link {
     color: var(--main-color);
 }
 .grid-item-title > a:visited {
     color: var(--main-color);
-    opacity: 0.70;
+    opacity: 0.7;
 }
 
 .details, .details a:link, .details a:visited {
-    color: #696969;
+    color: var(--light-text-color);
     font-size: x-small;
     margin-top: 3px;
 }
 
-.grid-item-datepub {
+a:hover {
+    text-decoration: underline !important;
 }
-
-.container {
-    margin: 5px;
-    /*padding-right: 15px;*/
-    display: grid;
-    grid-row-gap: 20px;
-    /*justify-content: center;*/
-}
-
-
 
 .navigation {
     text-align: center;
-    font-weight: 600;
-    margin-top: 10px;
-    color: var(--main-color);
+    margin: 10px;
 }
 
-.navigation>a {
-    border: solid;
-    border-radius: 10px;
-    border-width: 2px;
-    padding: 3px;
-    border-color: var(--main-color);
+.navigation > a {
+    border-radius: 20px;
+    padding: 8px 20px;
+    background-color: var(--light-bg-color);
     text-decoration: none;
-    color: var(--main-color);
+    color: inherit;
+    border: solid;
+    border-color: #a6a6a6;
+    border-width: 1px;
+}
+
+.navigation > a:hover {
+    text-decoration: none !important;
+    opacity: 0.7;
+}
+
+.navigation > a#prev::before {
+    content: "↩";
+}
+
+.navigation > a#next::after {
+    content: "↪";
+}
+
+a.button span {
+    display: none;
 }
 
 @media screen and (min-width: 801px) {
     .navigation {
         text-align: left;
     }
+
+    /*add some space around the arrows*/
+    .navigation > a#next::after {
+        margin-left: 10px;
+    }
+    .navigation > a#prev::before {
+        margin-right: 10px;
+    }
+
+    a.button span {
+        display: inline-block;
+}
 }
 
 .flair, a.flair:link, a.flair:visited  {
-    padding: 1px;
     border: solid;
+    border-color: #a6a6a6;
     border-width: 1px;
-    color: black;
-    border-color: black;
-    background-color: white;
-    font-weight:400;
+    color: inherit;
+    background-color: var(--light-bg-color);
+    font-weight:100;
+    border-radius: 20px;
+    padding: 1px 7px;
+    font-size: 0.8em;
+    margin-bottom: 3px;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --main-color: #8ab4f8;
+        --light-text-color: #969ba1;
+        --light-bg-color: #2f2f2f;
+    }
+    body {
+        background-color: #151515;
+        color: white
+    }
+    #navbar {
+        background-color: var(--light-bg-color);
+    }
 }
