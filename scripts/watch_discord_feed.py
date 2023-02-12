@@ -11,7 +11,7 @@ load_dotenv(path.join(basedir, "../.env"))
 
 
 @click.command()
-@click.option("--debug", help="In debug mode, nothing get printed on the server.")
+@click.option("--debug", is_flag=True, help="In debug mode, nothing get printed on the server.")
 def main(debug):
     intents = discord.Intents.default()
     intents.message_content = True
