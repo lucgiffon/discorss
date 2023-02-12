@@ -10,7 +10,7 @@
 
 body {
     font-family: "Courier New", serif;
-    font-size: 16px;
+    font-size: 1em;
     line-height: 1.4
 }
 
@@ -87,6 +87,7 @@ a:hover {
 }
 
 .navigation > a {
+    display: inline-block;
     border-radius: 20px;
     padding: 8px 20px;
     background-color: var(--light-bg-color);
@@ -104,10 +105,16 @@ a:hover {
 
 .navigation > a#prev::before {
     content: "↩";
+    font-size: x-large;
+    vertical-align: bottom;
+    line-height: 16px;
 }
 
 .navigation > a#next::after {
     content: "↪";
+    font-size: x-large;
+    vertical-align: bottom;
+    line-height: 16px;
 }
 
 a.button span {
