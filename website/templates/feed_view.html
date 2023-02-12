@@ -27,13 +27,10 @@
 
     <div class="navigation">
     {% if prev_url %}
-    <a class="button" id="prev" href="{{ prev_url }}">précédent</a>
+        <a class="button" id="prev" href="{{ prev_url }}"><span>précédent</span></a>
     {% endif %}
-{#    {% if prev_url and next_url %}#}
-{#    |#}
-{#    {% endif %}#}
     {% if next_url %}
-    <a class="button" id="next" href="{{ next_url }}">suivant</a>
+    <a class="button" id="next" href="{{ next_url }}"><span>suivant</span></a>
     {% endif %}
     </div>
 

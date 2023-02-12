@@ -104,18 +104,32 @@ a:hover {
 
 .navigation > a#prev::before {
     content: "↩";
-    margin-right: 10px;
 }
 
 .navigation > a#next::after {
     content: "↪";
-    margin-left: 10px;
+}
+
+a.button span {
+    display: none;
 }
 
 @media screen and (min-width: 801px) {
     .navigation {
         text-align: left;
     }
+
+    /*add some space around the arrows*/
+    .navigation > a#next::after {
+        margin-left: 10px;
+    }
+    .navigation > a#prev::before {
+        margin-right: 10px;
+    }
+
+    a.button span {
+        display: inline-block;
+}
 }
 
 .flair, a.flair:link, a.flair:visited  {
