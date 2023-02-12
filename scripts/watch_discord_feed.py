@@ -1,13 +1,17 @@
+import sys
 from os import path, environ
+from pathlib import Path
+
 import click
 import discord
 from dotenv import load_dotenv
+from loguru import logger
 
 from discorss_models.base import db_session
 from watcher.bot import DiscoRSS
 
-basedir = path.abspath(path.dirname(__file__))
-load_dotenv(path.join(basedir, "../.env"))
+basedir = Path(__file__).parent.parent
+load_dotenv(basedir / ".env")
 
 
 @click.command()
@@ -15,6 +19,8 @@ load_dotenv(path.join(basedir, "../.env"))
 def main(debug):
     intents = discord.Intents.default()
     intents.message_content = True
+
+    logger.add(basedir / "log/discord_watcher_bot.log", colorize=True)
 
     client = DiscoRSS(website_root_url=environ.get("WEBSITE_ROOT_URL"), sqlalchemy_session=db_session,
                       command_prefix="/", intents=intents, debug=debug)
