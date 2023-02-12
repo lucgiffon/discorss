@@ -9,7 +9,11 @@
                 {% if dict_link["channel_name"] is not none %}
                     <a href="/{{ guild_id }}/?channels={{ dict_link["channel_name"] }}" class="flair">{{ dict_link["channel_name"] }}</a>
                 {% endif %}
-                <a href="{{ dict_link["url"] }}" target="_blank">{{ dict_link["title"] }}</a>
+                <a href="{{ dict_link["url"] }}" target="_blank"
+                    {% if dict_link["url"] == dict_link["title"] %}
+                        style="word-break: break-all;"
+                    {% endif %}
+                >{{ dict_link["title"] }}</a>
             </div>
             <div class="details">Le: {{ dict_link["datepub"] }} | Source: {{ dict_link["site_name"] }}
             {% if dict_link["jump_url"] is not none %}
