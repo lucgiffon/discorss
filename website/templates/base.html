@@ -8,7 +8,7 @@
     <title>{% block title %}Discorss{% endblock %}</title>
 </head>
 <body>
-    <nav id="navbar">
+    <nav id="navbar" class="sticky">
         <a href="/" id="title">DiscoRSS</a>{% block servername %}{% endblock %}
     </nav>
 
@@ -35,7 +35,6 @@
     {% endwith %}
 
     <div class="content">
-        <div class="tip">Cliquez sur une catégorie pour afficher uniquement les articles de celle-ci</div>
         {% block content %}Default content{% endblock %}
     </div>
 

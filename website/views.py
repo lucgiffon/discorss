@@ -12,7 +12,7 @@ views_blueprint = Blueprint('views', __name__)
 
 @views_blueprint.route("/")
 def home():
-    return redirect("/d/serveur-de-thadeus-pwufxmdl", code=302)
+    return render_template("home.html")
 
 
 def get_guild_from_id(id_guild):

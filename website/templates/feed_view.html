@@ -2,6 +2,7 @@
 {% block title %}{{ guild_name }}{% endblock %}
 {% block servername %}<a href="/d/{{ guild_slug }}" id="subtitle">{{ guild_name }}</a>{% endblock %}
 {% block content %}
+    <div class="tip">Cliquez sur une catégorie pour afficher uniquement les articles de celle-ci</div>
     <div class="container">
     {% for dict_link in lst_dict_links %}
         <div class="grid-item">

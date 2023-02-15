@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}{{ guild_name }}{% endblock %}
+{% block servername %}<a href="/d/{{ guild_slug }}" id="subtitle">{{ guild_name }}</a>{% endblock %}
+{% block content %}
+
+    <div id="texts">
+    <h1 class="title_text">Qu'est-ce-que c'est?</h1>
+
+
+    <div class="text_block">
+    <div class="sub_text_block">
+    DiscoRSS permet de profiter des liens partagés sur un serveur Discord.
+    </div>
+    <div class="sub_text_block">
+    Sans avoir Discord.
+    </div>
+    </div>
+
+    <div class="text_block">
+    <div class="sub_text_block">
+        Les communautés Discord entretiennent une veille collective en partageant des liens.
+    </div>
+    <div class="sub_text_block">
+        DiscoRSS les récupère et les redistribue.
+    </div>
+    </div>
+    </div>
+
+    <div id="div_invite_bot">
+    <a id="invite_bot" href="https://discord.com/api/oauth2/authorize?client_id=1043554847523348521&permissions=65536&scope=bot">Invite DiscoRRS sur Discord</a>
+    </div>
+
+    <div id="cards">
+    <h1 class="title_text">3 promesses</h1>
+
+    <div class="value_card">
+    <img class="img_card" alt="Icône incognito" src={{ url_for('static', filename='feather.svg') }} />
+    <div class="title_card">Légereté</div>
+    <div>Les pages du site pèsent moins de 10 Ko.</div>
+    </div>
+
+    <div class="value_card">
+    <img class="img_card" alt="Icône incognito" src={{ url_for('static', filename='eye-off.svg') }} />
+    <div class="title_card">Discrétion</div>
+    <div>On ne stocke en base aucune donnée personnelle.</div>
+    </div>
+
+    <div class="value_card">
+    <img class="img_card" alt="Icône incognito" src={{ url_for('static', filename='volume-x.svg') }} />
+    <div class="title_card">Détente</div>
+    <div>Pas de débats éprouvants.</div>
+    </div>
+    </div>
+
+{% endblock %}

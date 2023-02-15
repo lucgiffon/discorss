@@ -22,6 +22,18 @@ body {
     flex-direction: column;
 }
 
+/* The sticky class is added to the navbar with JS when it reaches its scroll position */
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.sticky + .content {
+  padding-top: 75px;
+}
+
+
 #title, a#title:link, a#title:visited, a#title, a#title:active {
     font-weight: 1000;
     font-size: x-large;
@@ -121,24 +133,6 @@ a.button span {
     display: none;
 }
 
-@media screen and (min-width: 801px) {
-    .navigation {
-        text-align: left;
-    }
-
-    /*add some space around the arrows*/
-    .navigation > a#next::after {
-        margin-left: 10px;
-    }
-    .navigation > a#prev::before {
-        margin-right: 10px;
-    }
-
-    a.button span {
-        display: inline-block;
-}
-}
-
 .flair, a.flair:link, a.flair:visited  {
     border: solid;
     border-color: #a6a6a6;
@@ -150,6 +144,69 @@ a.button span {
     padding: 1px 7px;
     font-size: 0.8em;
     margin-bottom: 3px;
+}
+
+#texts {
+    margin-bottom: 50px;
+}
+.title_text {
+    text-align: center;
+    padding: 10px;
+}
+
+.text_block {
+    text-align: center;
+    padding: 0 30px 30px;
+    font-weight: bold;
+}
+
+.sub_text_block {
+    padding-top: 5px;
+}
+
+#div_invite_bot {
+    text-align: center;
+}
+
+#invite_bot {
+    /*display: inline-block;*/
+    /*border: solid;*/
+    border-radius: 5px;
+    padding: 15px 25px;
+    text-decoration: none;
+    color: white;
+    font-weight: bolder;
+    background-color: var(--main-color);
+}
+
+#invite_bot:hover {
+    text-decoration: none !important;
+    opacity: 0.7;
+}
+
+
+#cards {
+    display: grid;
+    margin-top: 100px;
+    text-align: center;
+    justify-items: center
+}
+
+.value_card {
+    /*display: block;*/
+    text-align: center;
+    vertical-align: center;
+    padding: 20px;
+    margin: 10px;
+    max-width: 20em;
+}
+
+.img_card {
+    padding-bottom: 20px;
+}
+.title_card {
+    padding-bottom: 20px;
+    font-weight: bold;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -165,4 +222,37 @@ a.button span {
     #navbar {
         background-color: var(--light-bg-color);
     }
+}
+
+@media screen and (min-width: 801px) {
+    .navigation {
+        text-align: left;
+    }
+
+    /*add some space around the arrows*/
+    .navigation > a#next::after {
+        margin-left: 10px;
+    }
+    .navigation > a#prev::before {
+        margin-right: 10px;
+    }
+
+    a.button span {
+        display: inline-block;
+    }
+
+    #cards {
+        grid-template-columns:1fr 1fr 1fr;
+
+    }
+
+    .title_text {
+        grid-column-start: 2;
+        grid-row-start: 1;
+    }
+
+    .value_card {
+      grid-row-start: 2;
+    }
+
 }
